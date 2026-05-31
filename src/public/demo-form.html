@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickApply Gateway — Careers Portal</title>
+  <style>
+    :root {
+      --hud-cyan: #00f0ff;
+      --hud-green: #00ff88;
+      --hud-dark: #0a0e17;
+      --hud-white: #e0f0ff;
+      --border-hud: rgba(0, 240, 255, 0.2);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: var(--hud-dark);
+      color: var(--hud-white);
+      font-family: 'Courier New', Courier, monospace;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 40%);
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 650px;
+      background: rgba(10, 14, 23, 0.8);
+      border: 1px solid var(--hud-cyan);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+      border-radius: 8px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--hud-cyan), #a855f7);
+    }
+
+    .header {
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border-hud);
+      padding-bottom: 15px;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      letter-spacing: 0.15em;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    }
+
+    .header p {
+      font-size: 0.75rem;
+      color: var(--hud-cyan);
+      margin-top: 5px;
+      opacity: 0.8;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+      color: rgba(224, 240, 255, 0.8);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      background: rgba(0, 240, 255, 0.03);
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--hud-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
+      background: rgba(0, 240, 255, 0.06);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin-top: 5px;
+      color: rgba(224, 240, 255, 0.6);
+      font-size: 0.8rem;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(90deg, rgba(0, 240, 255, 0.2), rgba(168, 85, 247, 0.2));
+      border: 1px solid var(--hud-cyan);
+      border-radius: 4px;
+      padding: 14px;
+      color: #fff;
+      font-family: inherit;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+      text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(90deg, rgba(0, 240, 255, 0.4), rgba(168, 85, 247, 0.4));
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    /* Success Screen */
+    .success-container {
+      display: none;
+      text-align: center;
+      padding: 40px 10px;
+    }
+
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px dashed var(--hud-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 1.8rem;
+      color: var(--hud-green);
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+      animation: pulse 2s infinite;
+    }
+
+    .success-container h2 {
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      color: var(--hud-green);
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+      margin-bottom: 12px;
+    }
+
+    .success-container p {
+      font-size: 0.8rem;
+      color: rgba(224, 240, 255, 0.6);
+      line-height: 1.6;
+    }
+
+    .live-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.6rem;
+      font-weight: bold;
+      color: var(--hud-cyan);
+      margin-bottom: 20px;
+      justify-content: flex-end;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--hud-cyan);
+      box-shadow: 0 0 8px var(--hud-cyan);
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container" id="mainContainer">
+    <div class="live-status">
+      <div class="live-dot"></div>
+      ACTIVE PORTAL // PORT_5000
+    </div>
+
+    <!-- Application Form -->
+    <form id="applyForm" onsubmit="handleSubmit(event)">
+      <div class="header">
+        <h1>GATEWAY INTERACTION</h1>
+        <p>// GATEWAY PORTAL AUTOMATED JOB FILL SYSTEM</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName" required placeholder="e.g. John">
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" required placeholder="e.g. Doe">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="fullName">Full Name (Standard)</label>
+        <input type="text" id="fullName" name="fullName" required placeholder="e.g. John Doe">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">E-mail Address</label>
+          <input type="email" id="email" name="email" required placeholder="e.g. john@domain.com">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone / Mobile</label>
+          <input type="text" id="phone" name="phone" placeholder="e.g. +91 98765 43210">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Current City / Location</label>
+        <input type="text" id="location" name="location" placeholder="e.g. Bangalore, India">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="linkedin">LinkedIn Profile URL</label>
+          <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/username">
+        </div>
+        <div class="form-group">
+          <label for="github">GitHub Profile URL</label>
+          <input type="text" id="github" name="github" placeholder="github.com/username">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="role">Current Job Title</label>
+          <input type="text" id="role" name="role" placeholder="e.g. Software Engineer">
+        </div>
+        <div class="form-group">
+          <label for="company">Current Employer</label>
+          <input type="text" id="company" name="company" placeholder="e.g. TechCorp">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="notice">Notice Period</label>
+          <select id="notice" name="notice">
+            <option value="Immediately">Immediate Joiner</option>
+            <option value="15 Days">15 Days Notice</option>
+            <option value="30 Days">30 Days Notice</option>
+            <option value="90 Days">90 Days Notice</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="salary">Expected Salary (CTC)</label>
+          <input type="text" id="salary" name="salary" placeholder="e.g. 15,00,000 INR">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="coverLetter">Cover Letter / Personal Statement</label>
+        <textarea id="coverLetter" name="coverLetter" placeholder="Write why you fit this role..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="resume">Attach PDF Resume</label>
+        <input type="file" id="resume" name="resume" accept=".pdf">
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
+    </form>
+
+    <!-- Success View -->
+    <div id="successView" class="success-container">
+      <div class="success-icon">✓</div>
+      <h2>APPLICATION TRANSMITTED</h2>
+      <p>Your job application has been successfully captured by the QuickApply.AI automated Puppeteer router.<br>The screenshot logs have been recorded.</p>
+    </div>
+  </div>
+
+  <script>
+    function handleSubmit(event) {
+      event.preventDefault();
+      
+      // Simulate visual loading on submit button
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.textContent = 'TRANSMITTING ENCRYPTED PACKET...';
+      submitBtn.disabled = true;
+      
+      setTimeout(() => {
+        document.getElementById('applyForm').style.display = 'none';
+        document.getElementById('successView').style.display = 'block';
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
