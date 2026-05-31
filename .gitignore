@@ -18,6 +18,7 @@ client/dist/
 .env.local
 .env.production
 .env.development
+.env.example
 
 # =========================
 # Uploads / Generated files
